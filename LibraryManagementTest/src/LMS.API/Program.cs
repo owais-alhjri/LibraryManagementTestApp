@@ -1,13 +1,32 @@
+using DotNetEnv;
+using LMS.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<LmsDbContext>(options =>
+{
+    var host = Environment.GetEnvironmentVariable("DB_HOST");
+    var port = Environment.GetEnvironmentVariable("DB_PORT");
+    var db = Environment.GetEnvironmentVariable("DB_NAME");
+    var user = Environment.GetEnvironmentVariable("DB_USER");
+    var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+    var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={password}";
+    options.UseNpgsql(connectionString);
+}
+);
+
 // Add services to the container.
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+Env.Load();
 
 var app = builder.Build();
 
@@ -23,5 +42,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LmsDbContext>();
+
+    var book = new LMS.Domain.Entities.Book(
+        "Clean Architecture",
+        "Robort C. Martin"
+        );
+
+    db.Books.Add(book);
+    db.SaveChanges();
+
+    Console.WriteLine("✅ Book inserted into database");
+}
 
 app.Run();
