@@ -53,8 +53,14 @@ using(var scope = app.Services.CreateScope())
         );
 
     db.Books.Add(book);
-    db.SaveChanges();
 
+    var user = new LMS.Domain.Entities.User(
+        "OWAIS",
+        "OWAIS@GMAIL.COM",
+        "OWAIS12345"
+        );
+    db.Users.Add(user);
+    db.SaveChanges();
     Console.WriteLine("✅ Book inserted into database");
 }
 
