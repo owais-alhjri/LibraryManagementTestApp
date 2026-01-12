@@ -42,26 +42,27 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+/*v
 using(var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<LmsDbContext>();
 
     var book = new LMS.Domain.Entities.Book(
-        "Clean Architecture",
-        "Robort C. Martin"
+        "Diary of a wimpy ked 3",
+        "Jeff Kinney"
         );
 
     db.Books.Add(book);
 
-    var user = new LMS.Domain.Entities.User(
+    ar user = new LMS.Domain.Entities.User(
         "OWAIS",
         "OWAIS@GMAIL.COM",
         "OWAIS12345"
         );
     db.Users.Add(user);
+    
     db.SaveChanges();
     Console.WriteLine("✅ Book inserted into database");
-}
+}*/
 
 app.Run();

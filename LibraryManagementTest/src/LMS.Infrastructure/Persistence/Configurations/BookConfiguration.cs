@@ -29,7 +29,8 @@ namespace LMS.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasConversion<string>();
 
-            builder.HasIndex(b => b.Title);
+            builder.HasIndex(b => b.Title)
+                .IsUnique();
         }
     }
 }
