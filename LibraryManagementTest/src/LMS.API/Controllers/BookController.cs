@@ -18,11 +18,11 @@ namespace LMS.API.Controllers
         }
 
         [HttpGet("allBooks")]
-        public async Task<ActionResult<List<BookDto>>> GetAllBooks()
+        public async Task<ActionResult<List<ResponseBookDto>>> GetAllBooks()
         {
             var books = await _dbContext.Books.ToListAsync();
 
-            var bookDtos = books.Select(b => new BookDto
+            var bookDtos = books.Select(b => new ResponseBookDto
             {
                 Id = b.Id,
                 Title = b.Title,

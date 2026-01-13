@@ -1,9 +1,15 @@
 using DotNetEnv;
+using LMS.Domain.Repositories;
 using LMS.Infrastructure.Persistence;
+using LMS.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddScoped<IBookRepository, BookRepository>(); 
 
 builder.Services.AddDbContext<LmsDbContext>(options =>
 {
@@ -21,7 +27,6 @@ builder.Services.AddDbContext<LmsDbContext>(options =>
 // Add services to the container.
 
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
