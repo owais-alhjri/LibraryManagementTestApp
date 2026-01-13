@@ -2,6 +2,7 @@
 using LMS.Domain.Entities;
 using LMS.Domain.Repositories;
 using LMS.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMS.Infrastructure.Repositories
 {
@@ -22,6 +23,11 @@ namespace LMS.Infrastructure.Repositories
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Book>> ListOfBooksAsync()
+        {
+            return await _dbContext.Books.ToListAsync();
         }
     }
 }

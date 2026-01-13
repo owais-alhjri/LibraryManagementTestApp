@@ -1,8 +1,7 @@
 ﻿using LMS.API.DTOs;
 using LMS.Domain.Entities;
-using LMS.Infrastructure.Persistence;
+using LMS.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LMS.API.Controllers
 {
@@ -10,17 +9,17 @@ namespace LMS.API.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly LmsDbContext _dbContext;
+        private readonly IBookRepository _bookRepository;
 
-        public BookController(LmsDbContext dbContext)
+        public BookController(IBookRepository bookRepository)
         {
-            _dbContext = dbContext;
+            _bookRepository = bookRepository;
         }
 
         [HttpGet("allBooks")]
         public async Task<ActionResult<List<ResponseBookDto>>> GetAllBooks()
         {
-            var books = await _dbContext.Books.ToListAsync();
+            var books = await _bookRepository.ListOfBooksAsync();
 
             var bookDtos = books.Select(b => new ResponseBookDto
             {
@@ -31,6 +30,28 @@ namespace LMS.API.Controllers
             }).ToList();
 
             return Ok(bookDtos);
+        }
+
+
+
+        [HttpPost("register")]
+        public async Task<ActionResult> AddBook([FromBody]CreateBookDto createBookDto)
+        {
+            if(createBookDto == null)
+            {
+                return BadRequest("Requsted body is null");
+            }
+
+            var book = new Book(createBookDto.Title, createBookDto.Author);
+
+            await _bookRepository.AddAsync(book);
+            await _bookRepository.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(AddBook),
+                new { id = book.Id },
+                "Book registerd successfully");
+                
         }
     }
 }
