@@ -5,6 +5,7 @@
 *.csproj.user
 bin/
 obj/
+.env
 # User-specific files
 *.rsuser
 *.suo
