@@ -1,5 +1,6 @@
 ﻿using LMS.API.DTOs;
 using LMS.Application.DTOs;
+using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
 using LMS.Domain.Enums;
 using LMS.Domain.Repositories;
@@ -13,29 +14,21 @@ namespace LMS.API.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
+        private readonly IBookService _bookService;
 
-        public BookController(IBookRepository bookRepository)
+        public BookController(IBookRepository bookRepository,IBookService bookService)
         {
             _bookRepository = bookRepository;
+            _bookService = bookService;
         }
 
         [HttpGet("allBooks")]
-        public async Task<ActionResult<List<ResponseBookDto>>> GetAllBooks()
+        public async Task<ActionResult> GetAllBooks()
         {
-            var books = await _bookRepository.ListOfBooksAsync();
+            var books = await _bookService.GetAllBooksAsync();
 
-            var bookDtos = books.Select(b => new ResponseBookDto
-            {
-                Id = b.Id,
-                Title = b.Title,
-                Author = b.Author,
-                BookState = b.BookState.ToString()
-            }).ToList();
-
-            return Ok(bookDtos);
+            return Ok(books);
         }
-
-
 
         [HttpPost("register")]
         public async Task<ActionResult> AddBook([FromBody]CreateBookDto createBookDto)
@@ -45,15 +38,12 @@ namespace LMS.API.Controllers
                 return BadRequest("Requsted body is null");
             }
 
-            var book = new Book(createBookDto.Title, createBookDto.Author);
-
-            await _bookRepository.AddAsync(book);
-            await _bookRepository.SaveChangesAsync();
+            var bookId = await _bookService.AddBookAsync(createBookDto);
 
             return CreatedAtAction(
                 nameof(AddBook),
-                new { id = book.Id },
-                "Book registerd successfully");  
+                new { id = bookId },
+                null);  
         }
 
         [HttpPut("updateBook/{id:guid}")]
@@ -64,32 +54,14 @@ namespace LMS.API.Controllers
                 return BadRequest("Requsted body is null");
             }
 
-            var book = await _bookRepository.GetByIdAsync(id);
+            var updated = await _bookService.UpdateBookAsync(updateBookDto,id);
 
-            if (book == null)
+            if (updated == false)
             {
-                return NotFound($"Book not found with this Id: {id}");
+                 return NotFound($"Book not found with this Id: {id}");
             }
 
-            BookState? parsedState = null;
-
-            if(updateBookDto.BookState != null)
-            {
-                if (!Enum.TryParse<BookState>(updateBookDto.BookState,true,out var state))
-                {
-                    return BadRequest("Invalid BookState value");
-                }
-
-                parsedState = state;
-            }
             
-
-            book.UpdateBook(updateBookDto.Title, updateBookDto.Author, parsedState);
-
-            
-            
-             await _bookRepository.SaveChangesAsync();
-
             return NoContent();
         }
 

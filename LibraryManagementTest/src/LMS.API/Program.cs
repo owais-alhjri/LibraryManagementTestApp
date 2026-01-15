@@ -1,4 +1,6 @@
 using DotNetEnv;
+using LMS.Application.Interfaces;
+using LMS.Application.Services;
 using LMS.Domain.Repositories;
 using LMS.Infrastructure.Persistence;
 using LMS.Infrastructure.Repositories;
@@ -9,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IBookRepository, BookRepository>(); 
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddDbContext<LmsDbContext>(options =>
 {

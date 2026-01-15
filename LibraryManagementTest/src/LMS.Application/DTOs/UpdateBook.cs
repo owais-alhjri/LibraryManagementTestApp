@@ -8,8 +8,8 @@ namespace LMS.Application.DTOs
 {
     public class UpdateBook
     {
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string BookState { get; set; }
+        public string? Title { get; set; }
+        public string? Author { get; set; }
+        public string? BookState { get; set; }
     }
 }
