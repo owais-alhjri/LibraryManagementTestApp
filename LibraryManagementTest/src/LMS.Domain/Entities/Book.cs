@@ -67,6 +67,18 @@ namespace LMS.Domain.Entities
 
             BookState = BookState.Available;
         }
+        public void UpdateBook(string? title, string? author, BookState? state)
+        {
+            if (title != null)
+                Title = title;
+
+            if (author != null)
+                Author = author;
+
+            if (state.HasValue)
+                BookState = state.Value;
+
+        }
 
     }
 

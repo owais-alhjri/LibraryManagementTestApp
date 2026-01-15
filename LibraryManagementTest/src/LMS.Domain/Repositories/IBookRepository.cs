@@ -8,6 +8,10 @@ namespace LMS.Domain.Repositories
         Task AddAsync(Book book);
         Task<List<Book>> ListOfBooksAsync();
 
+        Task UpdateBook(Book book);
+
         Task SaveChangesAsync();
+
+        Task<Book> GetByIdAsync(Guid id);
     }
 }
