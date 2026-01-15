@@ -1,5 +1,4 @@
-﻿
-using LMS.Domain.Entities;
+﻿using LMS.Domain.Entities;
 using LMS.Domain.Repositories;
 using LMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +44,16 @@ namespace LMS.Infrastructure.Repositories
             return book;
         }
 
+        public async Task DeleteByIdAsync(Guid id)
+        {
+            var book = await _dbContext.Books.FindAsync(id);
+            if (book == null)
+            {
+                return;
+            }
+            _dbContext.Remove(book);
+            await _dbContext.SaveChangesAsync();
+        }
 
     }
 }

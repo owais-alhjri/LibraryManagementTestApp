@@ -62,5 +62,19 @@ namespace LMS.Application.Services
 
             return true;
         }
+
+        public async Task<bool> DeleteBook(Guid id)
+        {
+            var book = await _bookRepository.GetByIdAsync(id);
+            if(book == null)
+            {
+                return false;
+            }
+
+            await _bookRepository.DeleteByIdAsync(id);
+            return true;
+
+        }
+
     }
 }

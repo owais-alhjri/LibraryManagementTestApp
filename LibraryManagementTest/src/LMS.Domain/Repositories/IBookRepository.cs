@@ -13,5 +13,7 @@ namespace LMS.Domain.Repositories
         Task SaveChangesAsync();
 
         Task<Book> GetByIdAsync(Guid id);
+
+        Task DeleteByIdAsync(Guid id);
     }
 }

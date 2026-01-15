@@ -65,5 +65,17 @@ namespace LMS.API.Controllers
             return NoContent();
         }
 
+        [HttpDelete("delete/{id:guid}")]
+        public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
+        {
+            var book = await _bookService.DeleteBook(id);
+            if(book == false)
+            {
+                return NotFound($"Book not found with this Id: {id}");
+            }
+
+            return NoContent();
+        }
+
     }
 }
