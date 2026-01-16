@@ -6,13 +6,11 @@ namespace LMS.Domain.Repositories
     public interface IBookRepository
     {
         Task AddAsync(Book book);
-        Task<List<Book>> ListOfBooksAsync();
-
-        Task UpdateBook(Book book);
+        Task<List<Book>> GetAllAsync();
 
         Task SaveChangesAsync();
 
-        Task<Book> GetByIdAsync(Guid id);
+        Task<Book?> GetByIdAsync(Guid id);
 
         Task DeleteByIdAsync(Guid id);
     }

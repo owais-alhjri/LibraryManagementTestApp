@@ -1,4 +1,5 @@
-﻿using LMS.API.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+using LMS.API.DTOs;
 using LMS.Application.DTOs;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
@@ -18,7 +19,7 @@ namespace LMS.Application.Services
 
         public async Task<List<ResponseBookDto>> GetAllBooksAsync()
         {
-            var books = await _bookRepository.ListOfBooksAsync();
+            var books = await _bookRepository.GetAllAsync();
 
             return books.Select(b => new ResponseBookDto
             {
@@ -42,9 +43,9 @@ namespace LMS.Application.Services
         public async Task<bool> UpdateBookAsync(UpdateBook updateBook,Guid id)
         {
             var book = await _bookRepository.GetByIdAsync(id);
-            if(book == null)
+            if(book is null)
             {
-                return false;
+                throw new KeyNotFoundException("Book not dound");
             }
             BookState? parsedState = null;
 
@@ -52,7 +53,9 @@ namespace LMS.Application.Services
             {
                 if (!Enum.TryParse<BookState>(updateBook.BookState, true, out var state))
                 {
-                    throw new ArgumentException("Invalid BookState value");
+
+                    throw new ValidationException("Invalid BookState");
+
                 }
 
                 parsedState = state;
@@ -72,8 +75,22 @@ namespace LMS.Application.Services
             }
 
             await _bookRepository.DeleteByIdAsync(id);
+            await _bookRepository.SaveChangesAsync();
             return true;
 
+        }
+        public async Task<ResponseBookDto?> GetBookByIdAsync(Guid id)
+        {
+            var book = await _bookRepository.GetByIdAsync(id);
+            if (book is null) return null;
+
+            return new ResponseBookDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                BookState = book.BookState.ToString()
+            };
         }
 
     }

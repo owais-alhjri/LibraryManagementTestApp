@@ -1,5 +1,7 @@
-﻿using LMS.API.DTOs;
+﻿using FluentResults;
+using LMS.API.DTOs;
 using LMS.Application.DTOs;
+using LMS.Domain.Entities;
 
 namespace LMS.Application.Interfaces
 {
@@ -10,5 +12,6 @@ namespace LMS.Application.Interfaces
         Task<Guid> AddBookAsync(CreateBookDto createBookDto);
         Task<bool> UpdateBookAsync(UpdateBook updateBook,Guid id);
         Task<bool> DeleteBook(Guid id);
+        Task<ResponseBookDto?> GetBookByIdAsync(Guid id);
     }
 }

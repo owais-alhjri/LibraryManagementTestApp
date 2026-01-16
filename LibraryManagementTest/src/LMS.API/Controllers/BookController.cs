@@ -1,10 +1,6 @@
 ﻿using LMS.API.DTOs;
 using LMS.Application.DTOs;
 using LMS.Application.Interfaces;
-using LMS.Domain.Entities;
-using LMS.Domain.Enums;
-using LMS.Domain.Repositories;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -13,16 +9,14 @@ namespace LMS.API.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBookRepository _bookRepository;
         private readonly IBookService _bookService;
 
-        public BookController(IBookRepository bookRepository,IBookService bookService)
+        public BookController(IBookService bookService)
         {
-            _bookRepository = bookRepository;
             _bookService = bookService;
         }
 
-        [HttpGet("allBooks")]
+        [HttpGet]
         public async Task<ActionResult> GetAllBooks()
         {
             var books = await _bookService.GetAllBooksAsync();
@@ -30,29 +24,29 @@ namespace LMS.API.Controllers
             return Ok(books);
         }
 
-        [HttpPost("register")]
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult> GetBookById([FromRoute]Guid id)
+        {
+            var book = await _bookService.GetBookByIdAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return Ok(book);
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddBook([FromBody]CreateBookDto createBookDto)
         {
-            if(createBookDto == null)
-            {
-                return BadRequest("Requsted body is null");
-            }
 
             var bookId = await _bookService.AddBookAsync(createBookDto);
 
-            return CreatedAtAction(
-                nameof(AddBook),
-                new { id = bookId },
-                null);  
+            return CreatedAtAction(nameof(GetBookById), new { id = bookId },null);  
         }
 
-        [HttpPut("updateBook/{id:guid}")]
+        [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateBook([FromBody] UpdateBook updateBookDto, [FromRoute] Guid id)
         {
-            if(updateBookDto == null)
-            {
-                return BadRequest("Requsted body is null");
-            }
 
             var updated = await _bookService.UpdateBookAsync(updateBookDto,id);
 
@@ -65,11 +59,11 @@ namespace LMS.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("delete/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
-            var book = await _bookService.DeleteBook(id);
-            if(book == false)
+            var deleted = await _bookService.DeleteBook(id);
+            if(deleted == false)
             {
                 return NotFound($"Book not found with this Id: {id}");
             }

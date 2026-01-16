@@ -2,7 +2,6 @@
 using LMS.Domain.Repositories;
 using LMS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace LMS.Infrastructure.Repositories
 {
@@ -25,20 +24,12 @@ namespace LMS.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Book>> ListOfBooksAsync()
+        public async Task<List<Book>> GetAllAsync()
         {
-            return await _dbContext.Books.ToListAsync();
-        }
+            return await _dbContext.Books.AsNoTracking().ToListAsync();
+        }  
 
-        
-        public Task UpdateBook(Book book)
-        {
-             _dbContext.Books.Update(book);
-            return Task.CompletedTask;
-        }
-        
-
-        public async Task<Book> GetByIdAsync(Guid id )
+        public async Task<Book?> GetByIdAsync(Guid id )
         {
              var book = await _dbContext.Books.FindAsync(id);
             return book;
@@ -52,7 +43,6 @@ namespace LMS.Infrastructure.Repositories
                 return;
             }
             _dbContext.Remove(book);
-            await _dbContext.SaveChangesAsync();
         }
 
     }
