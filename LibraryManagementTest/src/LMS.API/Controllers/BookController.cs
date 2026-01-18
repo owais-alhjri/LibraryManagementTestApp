@@ -25,7 +25,7 @@ namespace LMS.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult> GetBookById([FromRoute]Guid id)
+        public async Task<ActionResult> GetBookById([FromRoute] Guid id)
         {
             var book = await _bookService.GetBookByIdAsync(id);
             if (book == null)
@@ -36,26 +36,26 @@ namespace LMS.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddBook([FromBody]CreateBookDto createBookDto)
+        public async Task<ActionResult> AddBook([FromBody] CreateBookDto createBookDto)
         {
 
             var bookId = await _bookService.AddBookAsync(createBookDto);
 
-            return CreatedAtAction(nameof(GetBookById), new { id = bookId },null);  
+            return CreatedAtAction(nameof(GetBookById), new { id = bookId }, null);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateBook([FromBody] UpdateBook updateBookDto, [FromRoute] Guid id)
         {
 
-            var updated = await _bookService.UpdateBookAsync(updateBookDto,id);
+            var updated = await _bookService.UpdateBookAsync(updateBookDto, id);
 
             if (updated == false)
             {
-                 return NotFound($"Book not found with this Id: {id}");
+                return NotFound($"Book not found with this Id: {id}");
             }
 
-            
+
             return NoContent();
         }
 
@@ -63,7 +63,7 @@ namespace LMS.API.Controllers
         public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
             var deleted = await _bookService.DeleteBook(id);
-            if(deleted == false)
+            if (deleted == false)
             {
                 return NotFound($"Book not found with this Id: {id}");
             }

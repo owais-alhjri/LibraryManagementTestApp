@@ -4,6 +4,7 @@ using LMS.Application.Services;
 using LMS.Domain.Repositories;
 using LMS.Infrastructure.Persistence;
 using LMS.Infrastructure.Repositories;
+using LMS.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -13,6 +14,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPasswordHasher, IdentityPasswordHasher>();
 
 builder.Services.AddDbContext<LmsDbContext>(options =>
 {
