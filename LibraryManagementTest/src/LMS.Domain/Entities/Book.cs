@@ -9,7 +9,7 @@ namespace LMS.Domain.Entities
         public string Title { get; private set; }
         public string Author { get; private set; }
 
-        public BookState BookState { get; private set; } = BookState.Available;
+        public BookState State { get; private set; } = BookState.Available;
 
         private Book() { }
 
@@ -54,29 +54,31 @@ namespace LMS.Domain.Entities
 
         public void Borrow()
         {
-            if (BookState == BookState.Borrowed)
+            if (State == BookState.Borrowed)
                throw new InvalidOperationException("Book is already borrowed");
-            
-            BookState = BookState.Borrowed;
+
+            State = BookState.Borrowed;
         }
 
         public void Return()
         {
-            if (BookState == BookState.Available)
+            if (State == BookState.Available)
                 throw new InvalidOperationException("Book is not borrowed");
 
-            BookState = BookState.Available;
+            State = BookState.Available;
         }
         public void UpdateBook(string? title, string? author, BookState? state)
         {
-            if (title != null)
-                Title = title;
+            if (title is not null)
+                ValidateTitle(title);
+                Title = title.Trim();
 
-            if (author != null)
-                Author = author;
+            if (author is not null)
+                ValidateAuthor(author);
+                Author = author.Trim();
 
             if (state.HasValue)
-                BookState = state.Value;
+                State = state.Value;
 
         }
 

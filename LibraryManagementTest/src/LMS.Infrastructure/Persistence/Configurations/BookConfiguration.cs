@@ -25,7 +25,7 @@ namespace LMS.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(b => b.BookState)
+            builder.Property(b => b.State)
                 .IsRequired()
                 .HasConversion<string>();
 

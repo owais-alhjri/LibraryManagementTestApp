@@ -26,7 +26,7 @@ namespace LMS.Application.Services
                 Id = b.Id,
                 Title = b.Title,
                 Author = b.Author,
-                BookState = b.BookState.ToString()
+                BookState = b.State.ToString()
             }).ToList();
         }
 
@@ -89,7 +89,7 @@ namespace LMS.Application.Services
                 Id = book.Id,
                 Title = book.Title,
                 Author = book.Author,
-                BookState = book.BookState.ToString()
+                BookState = book.State.ToString()
             };
         }
 

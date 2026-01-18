@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection.Emit;
-using LMS.Domain.Entities;
+﻿using LMS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS.Infrastructure.Persistence
@@ -16,7 +14,9 @@ namespace LMS.Infrastructure.Persistence
 
         public DbSet<User> Users { get; set; }
 
-        
+        public DbSet<BorrowRecord> BorrowRecords { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
