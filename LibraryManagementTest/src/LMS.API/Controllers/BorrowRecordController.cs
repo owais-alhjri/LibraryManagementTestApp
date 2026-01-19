@@ -19,5 +19,14 @@ namespace LMS.API.Controllers
             var borrowId = await _borrowRecordService.BorrowBook(dto);
             return CreatedAtAction(nameof(BorrowBook),new { id = borrowId },borrowId);
         }
+
+        [HttpPost("return")]
+        public async Task<ActionResult<Guid>> ReturnBook([FromBody] ReturnBookDto dto)
+        {
+            var returnedId = await _borrowRecordService.ReturnBook(dto);
+
+
+            return CreatedAtAction(nameof(ReturnBook),new { id = returnedId},returnedId);
+        }
     }
 }

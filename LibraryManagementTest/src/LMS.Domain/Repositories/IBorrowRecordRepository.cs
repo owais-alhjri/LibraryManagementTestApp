@@ -6,5 +6,6 @@ namespace LMS.Domain.Repositories
     {
         Task BorrowBookAsync(BorrowRecord borrowRecord);
         Task SaveChangesAsync();
+        Task<BorrowRecord?> GetActiveBorrowAsync(Guid userId, Guid bookId);
     }
 }

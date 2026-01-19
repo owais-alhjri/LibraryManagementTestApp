@@ -74,18 +74,26 @@ namespace LMS.Domain.Entities
 
             State = BookState.Available;
         }
+
+
         public void UpdateBook(string? title, string? author, BookState? state)
         {
             if (title is not null)
+            {
                 ValidateTitle(title);
                 Title = title.Trim();
+            }
 
             if (author is not null)
+            {
                 ValidateAuthor(author);
                 Author = author.Trim();
-
+            }
             if (state.HasValue)
+            {
                 State = state.Value;
+            }
+
 
         }
 

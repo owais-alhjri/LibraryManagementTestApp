@@ -18,8 +18,6 @@ namespace LMS.Domain.Entities
             ArgumentNullException.ThrowIfNull(user);
             ArgumentNullException.ThrowIfNull(book);
 
-            book.Borrow();
-
             Id = Guid.NewGuid();
             UserId = user.Id;
             BookId = book.Id;
