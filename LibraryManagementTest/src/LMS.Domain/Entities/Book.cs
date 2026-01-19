@@ -54,11 +54,18 @@ namespace LMS.Domain.Entities
 
         public void Borrow()
         {
-            if (State == BookState.Borrowed)
-               throw new InvalidOperationException("Book is already borrowed");
+            Console.WriteLine($"Before check: {State}");
 
+            if (State == BookState.Borrowed)
+            {
+                Console.WriteLine("IF BLOCK EXECUTED");
+                throw new InvalidOperationException("Book is already borrowed");
+            }
+
+            Console.WriteLine("Borrowing book now...");
             State = BookState.Borrowed;
         }
+
 
         public void Return()
         {

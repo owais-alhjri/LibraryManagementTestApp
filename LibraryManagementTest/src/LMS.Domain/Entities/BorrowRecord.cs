@@ -8,7 +8,7 @@ namespace LMS.Domain.Entities
         public Guid UserId { get; private set; }
         public Guid BookId { get; private set; }
 
-        public DateTime BorrowedDate { get; private set; } = DateTime.UtcNow;
+        public DateTime BorrowedDate { get; private set; }
         public DateTime? ReturnedDate { get; private set; }
 
         private BorrowRecord() { }
@@ -29,6 +29,11 @@ namespace LMS.Domain.Entities
         }
         public void Return(Book book)
         {
+            ArgumentNullException.ThrowIfNull(book);
+            if(book.Id != BookId)
+            {
+                throw new InvalidOperationException("This borrow record dous not belong to the given book.");
+            }
             if (ReturnedDate is not null)
             {
                 throw new InvalidOperationException("Book is already returned");

@@ -21,7 +21,12 @@ namespace LMS.Infrastructure.Repositories
         {
             await _dbContext.SaveChangesAsync();
         }
+        public async Task<User?> GetByIdAsync(Guid id)
+        {
+            var userId = await _dbContext.Users.FindAsync(id);
 
+            return userId;
+        }
 
     }
 }

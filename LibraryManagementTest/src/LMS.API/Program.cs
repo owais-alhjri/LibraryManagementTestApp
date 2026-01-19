@@ -17,6 +17,8 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordHasher, IdentityPasswordHasher>();
+builder.Services.AddScoped<IBorrowRecordRepository, BorrowRecordRepository>();
+builder.Services.AddScoped<IBorrowRecordService, BorrowRecordService>();
 
 builder.Services.AddDbContext<LmsDbContext>(options =>
 {

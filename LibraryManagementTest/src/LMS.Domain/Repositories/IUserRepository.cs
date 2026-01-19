@@ -7,5 +7,6 @@ namespace LMS.Domain.Repositories
         Task AddUserAsync(User user);
 
         Task SaveChangesAsync();
+        Task<User?> GetByIdAsync(Guid id);
     }
 }

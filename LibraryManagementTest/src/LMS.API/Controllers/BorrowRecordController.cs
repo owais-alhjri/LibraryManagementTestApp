@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LMS.Application.DTOs.BorrowRecords;
+using LMS.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -7,11 +8,16 @@ namespace LMS.API.Controllers
     [ApiController]
     public class BorrowRecordController : ControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult> BorrowBook()
+        private readonly IBorrowRecordService _borrowRecordService;
+        public BorrowRecordController(IBorrowRecordService borrowRecordService)
         {
-
-            return Ok();
+            _borrowRecordService = borrowRecordService;
+        }
+        [HttpPost]
+        public async Task<ActionResult<Guid>> BorrowBook([FromBody] BorrowRecordCreateDto dto)
+        {
+            var borrowId = await _borrowRecordService.BorrowBook(dto);
+            return CreatedAtAction(nameof(BorrowBook),new { id = borrowId },borrowId);
         }
     }
 }
