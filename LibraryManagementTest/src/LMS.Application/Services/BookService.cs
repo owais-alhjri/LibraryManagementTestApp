@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LMS.API.DTOs;
-using LMS.Application.DTOs;
+using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
 using LMS.Domain.Enums;

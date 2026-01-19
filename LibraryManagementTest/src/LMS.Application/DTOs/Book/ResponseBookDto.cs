@@ -1,4 +1,4 @@
-﻿namespace LMS.API.DTOs
+﻿namespace LMS.Application.DTOs.Book
 {
     public class ResponseBookDto
     {

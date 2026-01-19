@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace LMS.Application.DTOs
+namespace LMS.Application.DTOs.User
 {
     public class RegisterUserDto
     {

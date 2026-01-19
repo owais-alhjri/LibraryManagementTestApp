@@ -1,4 +1,4 @@
-﻿using LMS.Application.DTOs;
+﻿using LMS.Application.DTOs.User;
 using LMS.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

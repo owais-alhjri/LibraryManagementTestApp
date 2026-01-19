@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LMS.Application.DTOs;
+using LMS.Application.DTOs.User;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
 using LMS.Domain.Repositories;

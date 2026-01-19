@@ -1,5 +1,4 @@
-﻿using LMS.API.DTOs;
-using LMS.Application.DTOs;
+﻿using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

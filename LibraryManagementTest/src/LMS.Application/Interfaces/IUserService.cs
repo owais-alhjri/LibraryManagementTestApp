@@ -1,5 +1,4 @@
-﻿
-using LMS.Application.DTOs;
+﻿using LMS.Application.DTOs.User;
 
 namespace LMS.Application.Interfaces
 {
