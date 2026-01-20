@@ -16,23 +16,12 @@ namespace LMS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllBooks()
-        {
-            var books = await _bookService.GetAllBooksAsync();
+        public async Task<ActionResult> GetAllBooks() => Ok(await _bookService.GetAllBooksAsync());
 
-            return Ok(books);
-        }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult> GetBookById([FromRoute] Guid id)
-        {
-            var book = await _bookService.GetBookByIdAsync(id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-            return Ok(book);
-        }
+        public async Task<ActionResult> GetBookById([FromRoute] Guid id) => Ok(await _bookService.GetBookByIdAsync(id));
+
 
         [HttpPost]
         public async Task<ActionResult> AddBook([FromBody] CreateBookDto createBookDto)
@@ -40,32 +29,20 @@ namespace LMS.API.Controllers
 
             var bookId = await _bookService.AddBookAsync(createBookDto);
 
-            return CreatedAtAction(nameof(GetBookById), new { id = bookId }, null);
+            return CreatedAtAction(nameof(GetBookById), new { id = bookId });
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult> UpdateBook([FromBody] UpdateBook updateBookDto, [FromRoute] Guid id)
         {
-
-            var updated = await _bookService.UpdateBookAsync(updateBookDto, id);
-
-            if (updated == false)
-            {
-                return NotFound($"Book not found with this Id: {id}");
-            }
-
-
+            await _bookService.UpdateBookAsync(updateBookDto, id);
             return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
-            var deleted = await _bookService.DeleteBook(id);
-            if (deleted == false)
-            {
-                return NotFound($"Book not found with this Id: {id}");
-            }
+            await _bookService.DeleteBook(id);
 
             return NoContent();
         }

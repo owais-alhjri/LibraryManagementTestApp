@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LMS.Application.Common.Exceptions;
 using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
@@ -7,10 +7,10 @@ using LMS.Domain.Repositories;
 
 namespace LMS.Application.Services
 {
-    public class BookService :IBookService
+    public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
-        
+
         public BookService(IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
@@ -36,19 +36,16 @@ namespace LMS.Application.Services
             await _bookRepository.AddAsync(book);
             await _bookRepository.SaveChangesAsync();
 
-            return  book.Id;
+            return book.Id;
         }
-        
-        public async Task<bool> UpdateBookAsync(UpdateBook updateBook,Guid id)
+
+        public async Task UpdateBookAsync(UpdateBook updateBook, Guid id)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if(book is null)
-            {
-                throw new KeyNotFoundException("Book not dound");
-            }
+            var book = await _bookRepository.GetByIdAsync(id) ?? throw new NotFoundException("Book", id);
+
             BookState? parsedState = null;
 
-            if (updateBook.BookState != null)
+            if (updateBook.BookState is not null)
             {
                 if (!Enum.TryParse<BookState>(updateBook.BookState, true, out var state))
                 {
@@ -62,26 +59,20 @@ namespace LMS.Application.Services
             book.UpdateBook(updateBook.Title, updateBook.Author, parsedState);
             await _bookRepository.SaveChangesAsync();
 
-            return true;
         }
 
-        public async Task<bool> DeleteBook(Guid id)
+        public async Task DeleteBook(Guid id)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if(book == null)
-            {
-                return false;
-            }
+            var book = await _bookRepository.GetByIdAsync(id) ?? throw new NotFoundException("Book", id);
 
             await _bookRepository.DeleteByIdAsync(id);
             await _bookRepository.SaveChangesAsync();
-            return true;
 
         }
         public async Task<ResponseBookDto?> GetBookByIdAsync(Guid id)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if (book is null) return null;
+            var book = await _bookRepository.GetByIdAsync(id) ?? throw new NotFoundException("Book", id);
+
 
             return new ResponseBookDto
             {

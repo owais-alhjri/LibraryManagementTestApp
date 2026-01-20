@@ -1,4 +1,5 @@
 using DotNetEnv;
+using LMS.API.Middleware;
 using LMS.Application.Interfaces;
 using LMS.Application.Services;
 using LMS.Domain.Repositories;
@@ -54,6 +55,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 /*v

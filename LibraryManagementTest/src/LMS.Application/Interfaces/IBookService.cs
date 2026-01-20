@@ -7,8 +7,8 @@ namespace LMS.Application.Interfaces
         Task<List<ResponseBookDto>> GetAllBooksAsync();
 
         Task<Guid> AddBookAsync(CreateBookDto createBookDto);
-        Task<bool> UpdateBookAsync(UpdateBook updateBook, Guid id);
-        Task<bool> DeleteBook(Guid id);
+        Task UpdateBookAsync(UpdateBook updateBook, Guid id);
+        Task DeleteBook(Guid id);
         Task<ResponseBookDto?> GetBookByIdAsync(Guid id);
     }
 }

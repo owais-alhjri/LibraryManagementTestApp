@@ -19,10 +19,9 @@ namespace LMS.API.Controllers
         {
             var userId = await _userService.AddUserAsync(registerUserDto);
 
-            //return CreatedAtAction(nameof(RegisterUser), new { id = userId }, null);
-            return Ok();
+            return CreatedAtAction(null, new { id = userId });
         }
-        
-        
+
+
     }
 }

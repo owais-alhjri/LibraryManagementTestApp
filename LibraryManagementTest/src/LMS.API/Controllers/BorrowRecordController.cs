@@ -6,27 +6,22 @@ namespace LMS.API.Controllers
 {
     [Route("api/borrow-records")]
     [ApiController]
-    public class BorrowRecordController : ControllerBase
+    public class BorrowRecordController(IBorrowRecordService borrowRecordService) : ControllerBase
     {
-        private readonly IBorrowRecordService _borrowRecordService;
-        public BorrowRecordController(IBorrowRecordService borrowRecordService)
-        {
-            _borrowRecordService = borrowRecordService;
-        }
+        private readonly IBorrowRecordService _borrowRecordService = borrowRecordService;
+
         [HttpPost]
         public async Task<ActionResult<Guid>> BorrowBook([FromBody] BorrowRecordCreateDto dto)
         {
             var borrowId = await _borrowRecordService.BorrowBook(dto);
-            return CreatedAtAction(nameof(BorrowBook),new { id = borrowId },borrowId);
+            return Ok(borrowId);
         }
 
         [HttpPost("return")]
         public async Task<ActionResult<Guid>> ReturnBook([FromBody] ReturnBookDto dto)
         {
-            var returnedId = await _borrowRecordService.ReturnBook(dto);
-
-
-            return CreatedAtAction(nameof(ReturnBook),new { id = returnedId},returnedId);
+            var id = await _borrowRecordService.ReturnBook(dto);
+            return Ok(id);
         }
     }
 }

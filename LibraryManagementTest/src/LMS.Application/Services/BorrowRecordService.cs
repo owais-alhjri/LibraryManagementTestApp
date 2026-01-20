@@ -1,4 +1,5 @@
-﻿using LMS.Application.DTOs.BorrowRecords;
+﻿using LMS.Application.Common.Exceptions;
+using LMS.Application.DTOs.BorrowRecords;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
 using LMS.Domain.Repositories;
@@ -19,16 +20,16 @@ namespace LMS.Application.Services
         public async Task<Guid> BorrowBook(BorrowRecordCreateDto borrowRecordCreateDto)
         {
             var book = await _bookRepository.GetByIdAsync(borrowRecordCreateDto.BookId);
-            if(book is null)
+            if (book is null)
             {
-                throw new KeyNotFoundException("Book not found");
+                throw new NotFoundException("Book", borrowRecordCreateDto.BookId);
             }
             var user = await _userRepository.GetByIdAsync(borrowRecordCreateDto.UserId);
-            if(user is null)
+            if (user is null)
             {
-                throw new KeyNotFoundException("User Not found");
+                throw new NotFoundException("User", borrowRecordCreateDto.UserId);
             }
-            
+
             var borrow = new BorrowRecord(user, book);
             book.Borrow();
             await _recordRepository.BorrowBookAsync(borrow);
@@ -39,18 +40,17 @@ namespace LMS.Application.Services
 
         public async Task<Guid> ReturnBook(ReturnBookDto dto)
         {
-            var book = await _bookRepository.GetByIdAsync(dto.BookId) ?? throw new KeyNotFoundException("Book not found");
-            
-            var user = await _userRepository.GetByIdAsync(dto.UserId)?? throw new KeyNotFoundException("User not found") ;
+            var book = await _bookRepository.GetByIdAsync(dto.BookId) ?? throw new NotFoundException("Book", dto.BookId);
+
+            var user = await _userRepository.GetByIdAsync(dto.UserId) ?? throw new NotFoundException("User", dto.UserId);
 
             var borrowRecord = await _recordRepository.GetActiveBorrowAsync(dto.UserId, dto.BookId);
             if (borrowRecord is null)
             {
-                // use KeyNotFound to indicate resource not found (controller / middleware can map to 404)
-                throw new KeyNotFoundException("No active borrow record found for given user and book.");
+                throw new NotFoundException("BorrowRecord", $"UserId={dto.UserId} ,BookId={dto.BookId}");
             }
 
-            borrowRecord.Return(book);            
+            borrowRecord.Return(book);
             await _recordRepository.SaveChangesAsync();
 
             return borrowRecord.Id;
