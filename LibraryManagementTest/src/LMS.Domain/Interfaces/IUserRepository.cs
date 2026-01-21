@@ -1,6 +1,6 @@
 ﻿using LMS.Domain.Entities;
 
-namespace LMS.Domain.Repositories
+namespace LMS.Domain.Interfaces
 {
     public interface IUserRepository
     {

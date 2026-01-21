@@ -2,7 +2,7 @@
 using LMS.Application.DTOs.BorrowRecords;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
-using LMS.Domain.Repositories;
+using LMS.Domain.Interfaces;
 
 namespace LMS.Application.Services
 {

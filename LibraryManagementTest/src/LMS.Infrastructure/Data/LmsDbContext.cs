@@ -1,7 +1,7 @@
 ﻿using LMS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LMS.Infrastructure.Persistence
+namespace LMS.Infrastructure.Data
 {
     public class LmsDbContext : DbContext
     {

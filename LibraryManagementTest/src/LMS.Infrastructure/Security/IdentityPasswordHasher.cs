@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LMS.Infrastructure.Security
 {
-    public class IdentityPasswordHasher :IPasswordHasher
+    public class IdentityPasswordHasher : IPasswordHasherService
     {
         private readonly PasswordHasher<User> _passwordHasher;
 

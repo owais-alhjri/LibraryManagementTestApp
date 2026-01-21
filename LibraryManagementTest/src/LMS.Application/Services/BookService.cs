@@ -3,7 +3,7 @@ using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
 using LMS.Domain.Enums;
-using LMS.Domain.Repositories;
+using LMS.Domain.Interfaces;
 
 namespace LMS.Application.Services
 {

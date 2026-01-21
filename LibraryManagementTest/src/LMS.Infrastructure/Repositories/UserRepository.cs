@@ -1,6 +1,6 @@
 ﻿using LMS.Domain.Entities;
-using LMS.Domain.Repositories;
-using LMS.Infrastructure.Persistence;
+using LMS.Domain.Interfaces;
+using LMS.Infrastructure.Data;
 
 namespace LMS.Infrastructure.Repositories
 {
