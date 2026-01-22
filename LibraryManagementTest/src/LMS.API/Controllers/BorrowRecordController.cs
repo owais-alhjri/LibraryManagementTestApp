@@ -10,18 +10,40 @@ namespace LMS.API.Controllers
     {
         private readonly IBorrowRecordService _borrowRecordService = borrowRecordService;
 
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult> FetchBorrowedBook([FromRoute] Guid id)
+        {
+            var borooed =  await _borrowRecordService.GetBorrowedaRecordById(id);
+            return Ok(borooed);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<Guid>> BorrowBook([FromBody] BorrowRecordCreateDto dto)
         {
             var borrowId = await _borrowRecordService.BorrowBook(dto);
-            return Ok(borrowId);
+            var borrowedInfo = new BorrowRecordResponseDto
+            {
+                Id = borrowId,
+                UserId = dto.UserId,
+                BookId = dto.BookId,
+                Message = "You have borrowed successfully",
+                BorrowedDate = DateTime.UtcNow
+
+            };
+            return CreatedAtAction(nameof(FetchBorrowedBook),new{ id = borrowId}, borrowedInfo);
         }
 
         [HttpPost("return")]
-        public async Task<ActionResult<Guid>> ReturnBook([FromBody] ReturnBookDto dto)
+        public async Task<ActionResult<ReturnBookResponseDto>> ReturnBook([FromBody] ReturnBookDto dto)
         {
-            var id = await _borrowRecordService.ReturnBook(dto);
-            return Ok(id);
+            var result = await _borrowRecordService.ReturnBook(dto);
+            return Ok(new ReturnBookResponseDto
+            {
+                Id = result.Id,
+                ReturnedDate = result.ReturnedDate,
+                Message = "Book returned successfully",
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
+using LMS.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -29,7 +30,10 @@ namespace LMS.API.Controllers
 
             var bookId = await _bookService.AddBookAsync(createBookDto);
 
-            return CreatedAtAction(nameof(GetBookById), new { id = bookId });
+            var createdBook = await _bookService.GetBookByIdAsync(bookId);
+
+
+            return CreatedAtAction(nameof(GetBookById), new { id = bookId },createdBook);
         }
 
         [HttpPut("{id:guid}")]

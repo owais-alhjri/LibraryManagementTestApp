@@ -3,13 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Middleware
 {
-    public class ExceptionHandlingMiddleware
+    public sealed class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+        public ExceptionHandlingMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -20,15 +24,19 @@ namespace LMS.API.Middleware
             }
             catch (AppException ex)
             {
+                _logger.LogWarning(ex, "Handled application exception");
                 await HandleAppExceptionAsync(context, ex);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await HandleUnhandledExceptionAsync(context);
+                _logger.LogError(ex, "Unhandled exception occurred");
+                await HandleUnhandledExceptionAsync(context, ex);
             }
         }
 
-        private static async Task HandleAppExceptionAsync(HttpContext context, AppException exception)
+        private static async Task HandleAppExceptionAsync(
+            HttpContext context,
+            AppException exception)
         {
             var statusCode = exception switch
             {
@@ -41,7 +49,13 @@ namespace LMS.API.Middleware
             var problem = new ProblemDetails
             {
                 Type = $"https://httpstatuses.com/{statusCode}",
-                Title = exception.GetType().Name.Replace("Excption", ""),
+                Title = statusCode switch
+                {
+                    StatusCodes.Status404NotFound => "Resource not found",
+                    StatusCodes.Status400BadRequest => "Validation error",
+                    StatusCodes.Status409Conflict => "Conflict",
+                    _ => "Application error"
+                },
                 Status = statusCode,
                 Detail = exception.Message,
                 Instance = context.Request.Path
@@ -51,19 +65,25 @@ namespace LMS.API.Middleware
             context.Response.ContentType = "application/problem+json";
 
             await context.Response.WriteAsJsonAsync(problem);
-
         }
 
-        private static async Task HandleUnhandledExceptionAsync(HttpContext context)
+        private static async Task HandleUnhandledExceptionAsync(
+            HttpContext context,
+            Exception exception)
         {
+            var env = context.RequestServices.GetRequiredService<IHostEnvironment>();
+
             var problem = new ProblemDetails
             {
                 Type = "https://httpstatuses.com/500",
                 Title = "Internal Server Error",
                 Status = StatusCodes.Status500InternalServerError,
-                Detail = "An unexpected error occurred.",
+                Detail = env.IsDevelopment()
+                    ? exception.Message
+                    : "An unexpected error occurred.",
                 Instance = context.Request.Path
             };
+
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/problem+json";
 

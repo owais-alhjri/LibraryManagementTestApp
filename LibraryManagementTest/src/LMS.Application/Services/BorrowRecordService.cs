@@ -38,7 +38,7 @@ namespace LMS.Application.Services
             return borrow.Id;
         }
 
-        public async Task<Guid> ReturnBook(ReturnBookDto dto)
+        public async Task<ReturnBookResponseDto> ReturnBook(ReturnBookDto dto)
         {
             var book = await _bookRepository.GetByIdAsync(dto.BookId) ?? throw new NotFoundException("Book", dto.BookId);
 
@@ -53,7 +53,26 @@ namespace LMS.Application.Services
             borrowRecord.Return(book);
             await _recordRepository.SaveChangesAsync();
 
-            return borrowRecord.Id;
+            return new ReturnBookResponseDto
+            {
+                Id = borrowRecord.Id,
+                ReturnedDate = borrowRecord.ReturnedDate!.Value
+            };
+        }
+
+        public async Task<BorrowRecordResponseDto?> GetBorrowedaRecordById(Guid id)
+        {
+            var borrowed = await _recordRepository.GetById(id) ?? throw new NotFoundException("Borrowed Record", id);
+
+            return new BorrowRecordResponseDto
+            {
+                Id = id,
+                UserId = borrowed.UserId,
+                BookId = borrowed.BookId,
+                Message = "Borrowed Record Information",
+                BorrowedDate = borrowed.BorrowedDate,
+                ReturnedDate = borrowed.ReturnedDate
+            };
         }
     }
 }

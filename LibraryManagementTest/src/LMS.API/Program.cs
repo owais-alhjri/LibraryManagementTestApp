@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using DotNetEnv;
 using LMS.API.Middleware;
 using LMS.Application.Interfaces;
 using LMS.Application.Services;
@@ -33,6 +30,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<LmsDbContext>();
+
+    try
+    {
+        dbContext.Database.Migrate();
+    }catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider
+            .GetRequiredService<ILogger<Program>>();
+
+        logger.LogError(ex, "An error occured wihle migrating the database.");
+        throw;
+    }
+
+}
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

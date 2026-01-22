@@ -7,5 +7,7 @@ namespace LMS.Domain.Interfaces
         Task BorrowBookAsync(BorrowRecord borrowRecord);
         Task SaveChangesAsync();
         Task<BorrowRecord?> GetActiveBorrowAsync(Guid userId, Guid bookId);
+
+        Task<BorrowRecord?> GetById(Guid id);
     }
 }

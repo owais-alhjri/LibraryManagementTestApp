@@ -29,5 +29,11 @@ namespace LMS.Infrastructure.Repositories
              br.BookId == bookId &&
              br.ReturnedDate == null);
         }
+
+        public async Task<BorrowRecord?> GetById(Guid id)
+        {
+            var borrowed = await _dbContext.BorrowRecords.FindAsync(id);
+            return borrowed;
+        }
     }
 }
