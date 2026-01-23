@@ -1,6 +1,5 @@
 ﻿using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
-using LMS.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -28,27 +27,44 @@ namespace LMS.API.Controllers
         public async Task<ActionResult> AddBook([FromBody] CreateBookDto createBookDto)
         {
 
-            var bookId = await _bookService.AddBookAsync(createBookDto);
+            var book = await _bookService.AddBookAsync(createBookDto);
 
-            var createdBook = await _bookService.GetBookByIdAsync(bookId);
-
-
-            return CreatedAtAction(nameof(GetBookById), new { id = bookId },createdBook);
+            return Ok(new ResponseBookDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                BookState = book.State.ToString(),
+                Message = "Book is registered successfully"
+            });
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<ActionResult> UpdateBook([FromBody] UpdateBook updateBookDto, [FromRoute] Guid id)
+        [HttpPatch("{id:guid}")]
+        public async Task<ActionResult> UpdateBook([FromBody] UpdateBookPatchDto updateBookDto, [FromRoute] Guid id)
         {
-            await _bookService.UpdateBookAsync(updateBookDto, id);
-            return NoContent();
+            var book = await _bookService.UpdateBookAsync(updateBookDto, id);
+            return Ok(new ResponseBookDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                BookState = book.State.ToString(),
+                Message = "Book updated successfully"
+            });
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
-            await _bookService.DeleteBook(id);
+            var book = await _bookService.DeleteBook(id);
 
-            return NoContent();
+            return Ok(new DeleteBookResponseDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                Message = "Book is deleted successfully"
+            });
         }
 
     }

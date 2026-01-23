@@ -13,8 +13,17 @@ namespace LMS.API.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> FetchBorrowedBook([FromRoute] Guid id)
         {
-            var borooed =  await _borrowRecordService.GetBorrowedaRecordById(id);
-            return Ok(borooed);
+            var borooed = await _borrowRecordService.GetBorrowedaRecordById(id);
+
+            return Ok(new BorrowRecordResponseDto
+            {
+                Message = "Borrowed Info",
+                Id = id,
+                UserId = borooed.UserId,
+                BookId = borooed.BookId,
+                BorrowedDate = borooed.BorrowedDate
+
+            });
         }
 
 
@@ -31,7 +40,7 @@ namespace LMS.API.Controllers
                 BorrowedDate = DateTime.UtcNow
 
             };
-            return CreatedAtAction(nameof(FetchBorrowedBook),new{ id = borrowId}, borrowedInfo);
+            return CreatedAtAction(nameof(FetchBorrowedBook), new { id = borrowId }, borrowedInfo);
         }
 
         [HttpPost("return")]

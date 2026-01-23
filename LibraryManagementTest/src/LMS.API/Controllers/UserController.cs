@@ -17,9 +17,15 @@ namespace LMS.API.Controllers
         [HttpPost]
         public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
-            var userId = await _userService.AddUserAsync(registerUserDto);
+            var user = await _userService.AddUserAsync(registerUserDto);
 
-            return CreatedAtAction(null, new { id = userId });
+            return Ok(new ResponseUserDto
+            {
+                Id =user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Message = "User is registered successfully"
+            });
         }
 
 

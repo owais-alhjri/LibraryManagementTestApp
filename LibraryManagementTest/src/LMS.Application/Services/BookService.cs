@@ -16,11 +16,11 @@ namespace LMS.Application.Services
             _bookRepository = bookRepository;
         }
 
-        public async Task<List<ResponseBookDto>> GetAllBooksAsync()
+        public async Task<List<ResponseOfAllTheBooks>> GetAllBooksAsync()
         {
             var books = await _bookRepository.GetAllAsync();
 
-            return books.Select(b => new ResponseBookDto
+            return books.Select(b => new ResponseOfAllTheBooks
             {
                 Id = b.Id,
                 Title = b.Title,
@@ -29,17 +29,17 @@ namespace LMS.Application.Services
             }).ToList();
         }
 
-        public async Task<Guid> AddBookAsync(CreateBookDto createBookDto)
+        public async Task<Book> AddBookAsync(CreateBookDto createBookDto)
         {
             var book = new Book(createBookDto.Title, createBookDto.Author);
 
             await _bookRepository.AddAsync(book);
             await _bookRepository.SaveChangesAsync();
 
-            return book.Id;
+            return book;
         }
 
-        public async Task UpdateBookAsync(UpdateBook updateBook, Guid id)
+        public async Task<Book> UpdateBookAsync(UpdateBookPatchDto updateBook, Guid id)
         {
             var book = await _bookRepository.GetByIdAsync(id) ?? throw new NotFoundException("Book", id);
 
@@ -56,18 +56,24 @@ namespace LMS.Application.Services
 
                 parsedState = state;
             }
+            if(updateBook.Title is null && updateBook.Author is null && updateBook.BookState is null)
+            {
+                throw new ValidationException("At least one field mus be provided for update.");
+            }
             book.UpdateBook(updateBook.Title, updateBook.Author, parsedState);
             await _bookRepository.SaveChangesAsync();
 
+            return book;
+
         }
 
-        public async Task DeleteBook(Guid id)
+        public async Task<Book> DeleteBook(Guid id)
         {
             var book = await _bookRepository.GetByIdAsync(id) ?? throw new NotFoundException("Book", id);
 
             await _bookRepository.DeleteByIdAsync(id);
             await _bookRepository.SaveChangesAsync();
-
+            return book;
         }
         public async Task<ResponseBookDto?> GetBookByIdAsync(Guid id)
         {
@@ -79,7 +85,8 @@ namespace LMS.Application.Services
                 Id = book.Id,
                 Title = book.Title,
                 Author = book.Author,
-                BookState = book.State.ToString()
+                BookState = book.State.ToString(),
+                Message = "Book info"
             };
         }
 

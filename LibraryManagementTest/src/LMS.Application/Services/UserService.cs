@@ -16,7 +16,7 @@ namespace LMS.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<Guid> AddUserAsync(RegisterUserDto registerUserDto)
+        public async Task<User> AddUserAsync(RegisterUserDto registerUserDto)
         {
             var hashedPassword = _passwordHasher.Hash(registerUserDto.Password);
 
@@ -30,7 +30,7 @@ namespace LMS.Application.Services
             await _userRepository.AddUserAsync(user);
             await _userRepository.SaveChangesAsync();
 
-            return user.Id;
+            return user;
         }
         
         
