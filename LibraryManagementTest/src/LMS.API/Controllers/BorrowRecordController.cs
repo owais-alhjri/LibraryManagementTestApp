@@ -15,15 +15,7 @@ namespace LMS.API.Controllers
         {
             var borooed = await _borrowRecordService.GetBorrowedaRecordById(id);
 
-            return Ok(new BorrowRecordResponseDto
-            {
-                Message = "Borrowed Info",
-                Id = id,
-                UserId = borooed.UserId,
-                BookId = borooed.BookId,
-                BorrowedDate = borooed.BorrowedDate
-
-            });
+            return Ok(borooed);
         }
 
 
