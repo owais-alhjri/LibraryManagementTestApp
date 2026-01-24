@@ -1,5 +1,6 @@
 ﻿using LMS.Application.DTOs.Book;
 using LMS.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -67,5 +68,11 @@ namespace LMS.API.Controllers
             });
         }
 
+        [Authorize]
+        [HttpGet("secure-test")]
+        public IActionResult SecureTest()
+        {
+            return Ok("JWT works 🎉");
+        }
     }
 }
