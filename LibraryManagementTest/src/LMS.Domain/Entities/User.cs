@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace LMS.Domain.Entities
 {
@@ -16,7 +11,7 @@ namespace LMS.Domain.Entities
 
         public string PasswordHash { get; private set; }
 
-        private User() {}
+        private User() { }
 
         public User(string name, string email, string passwordHash)
         {
@@ -35,7 +30,7 @@ namespace LMS.Domain.Entities
             {
                 throw new ArgumentException("Name cannot be empty");
             }
-            if(name.Length < 3 || name.Length > 100)
+            if (name.Length < 3 || name.Length > 100)
             {
                 throw new ArgumentException("Name must be between 3 and 100 characters");
             }

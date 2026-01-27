@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LMS.Application.Common.Exceptions;
 using LMS.Application.DTOs.User;
 using LMS.Application.Interfaces;
 using LMS.Domain.Entities;
@@ -6,7 +6,7 @@ using LMS.Domain.Interfaces;
 
 namespace LMS.Application.Services
 {
-    public class UserService :IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasherService _passwordHasher;
@@ -25,14 +25,20 @@ namespace LMS.Application.Services
                 registerUserDto.Email,
                 hashedPassword);
 
-            
+
 
             await _userRepository.AddUserAsync(user);
             await _userRepository.SaveChangesAsync();
 
             return user;
         }
-        
-        
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var userEmail = await _userRepository.GetByEmailAsync(email) ?? throw new NotFoundException("User email ", email);
+            return userEmail;
+        }
+
+
     }
 }

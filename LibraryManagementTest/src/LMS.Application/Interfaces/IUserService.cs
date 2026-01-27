@@ -6,5 +6,6 @@ namespace LMS.Application.Interfaces
     public interface IUserService
     {
         public Task<User> AddUserAsync(RegisterUserDto registerUserDto);
+        public Task<User> GetUserByEmail(string email);
     }
 }
