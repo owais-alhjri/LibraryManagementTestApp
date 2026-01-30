@@ -28,6 +28,10 @@ namespace LMS.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(500);
 
+            builder.Property(u => u.Role)
+                .IsRequired()
+                .HasConversion<string>();
+
             builder.HasIndex(u => u.Email)
                 .IsUnique();
         }

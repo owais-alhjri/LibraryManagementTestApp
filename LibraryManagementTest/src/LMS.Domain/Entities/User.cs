@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using LMS.Domain.Enums;
 
 namespace LMS.Domain.Entities
 {
@@ -10,6 +11,8 @@ namespace LMS.Domain.Entities
         public string Email { get; private set; }
 
         public string PasswordHash { get; private set; }
+
+        public Roles Role { get; private set; } = Roles.MEMBER;
 
         private User() { }
 

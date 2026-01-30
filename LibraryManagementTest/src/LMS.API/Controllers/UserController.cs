@@ -32,6 +32,7 @@ namespace LMS.API.Controllers
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
+                Role = user.Role.ToString(),
                 Message = "User is registered successfully"
             });
         }
