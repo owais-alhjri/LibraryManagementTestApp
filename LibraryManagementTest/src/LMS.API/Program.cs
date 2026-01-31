@@ -16,6 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+
+var jwtSecret = builder.Configuration["JwtSettings:SecretKey"];
+
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    throw new InvalidOperationException("JWT_SECRET is not configured!");
+}
+
 // DbContext
 builder.Services.AddDbContext<LmsDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
