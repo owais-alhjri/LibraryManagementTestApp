@@ -16,14 +16,15 @@ namespace LMS.API.Controllers
             _bookService = bookService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult> GetAllBooks() => Ok(await _bookService.GetAllBooksAsync());
 
-
+        [Authorize]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> GetBookById([FromRoute] Guid id) => Ok(await _bookService.GetBookByIdAsync(id));
 
-
+        [Authorize(Roles = "ADMIN,LIBRARIAN")]
         [HttpPost]
         public async Task<ActionResult> AddBook([FromBody] CreateBookDto createBookDto)
         {
@@ -40,6 +41,7 @@ namespace LMS.API.Controllers
             });
         }
 
+        [Authorize(Roles = "ADMIN,LIBRARIAN")]
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult> UpdateBook([FromBody] UpdateBookPatchDto updateBookDto, [FromRoute] Guid id)
         {
@@ -54,6 +56,8 @@ namespace LMS.API.Controllers
             });
         }
 
+
+        [Authorize(Roles = "ADMIN,LIBRARIAN")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult> DeleteBook([FromRoute] Guid id)
         {
@@ -68,11 +72,5 @@ namespace LMS.API.Controllers
             });
         }
 
-        [Authorize]
-        [HttpGet("secure-test")]
-        public IActionResult SecureTest()
-        {
-            return Ok("JWT works 🎉");
-        }
     }
 }

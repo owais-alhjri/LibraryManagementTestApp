@@ -1,5 +1,6 @@
 ﻿using LMS.Application.DTOs.BorrowRecords;
 using LMS.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -10,6 +11,7 @@ namespace LMS.API.Controllers
     {
         private readonly IBorrowRecordService _borrowRecordService = borrowRecordService;
 
+        [Authorize(Roles = "ADMIN,LIBRARIAN,MEMBER")]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> FetchBorrowedBook([FromRoute] Guid id)
         {
@@ -18,7 +20,7 @@ namespace LMS.API.Controllers
             return Ok(borooed);
         }
 
-
+        [Authorize(Roles = "ADMIN,MEMBER")]
         [HttpPost]
         public async Task<ActionResult<Guid>> BorrowBook([FromBody] BorrowRecordCreateDto dto)
         {
@@ -35,6 +37,7 @@ namespace LMS.API.Controllers
             return CreatedAtAction(nameof(FetchBorrowedBook), new { id = borrowId }, borrowedInfo);
         }
 
+        [Authorize(Roles = "ADMIN,MEMBER")]
         [HttpPost("return")]
         public async Task<ActionResult<ReturnBookResponseDto>> ReturnBook([FromBody] ReturnBookDto dto)
         {

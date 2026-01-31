@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +83,7 @@ builder.Services
             ),
 
             ClockSkew = TimeSpan.Zero,
-            RoleClaimType = "role"
+            RoleClaimType = ClaimTypes.Role
         };
     });
 

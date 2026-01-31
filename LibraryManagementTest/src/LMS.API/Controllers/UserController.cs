@@ -1,10 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using LMS.Application.DTOs.User;
+﻿using LMS.Application.DTOs.User;
 using LMS.Application.Interfaces;
 using LMS.Domain.Auth;
-using LMS.Domain.Enums;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -51,7 +47,7 @@ namespace LMS.API.Controllers
             {
                 UserId = user.Id,
                 Email = user.Email,
-                Role = Roles.MEMBER
+                Role = user.Role
             };
 
             var token = _tokenService.GenerateToken(claims);
@@ -59,18 +55,6 @@ namespace LMS.API.Controllers
 
         }
 
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult Me()
-        {
-            return Ok(new
-            {
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-                Email = User.FindFirstValue(ClaimTypes.Email),
-                Role = User.FindFirstValue(ClaimTypes.Role)
-            });
-
-        }
 
 
     }
